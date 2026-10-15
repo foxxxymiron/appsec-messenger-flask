@@ -1,0 +1,237 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f0f2f5;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.auth-container {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+.auth-container h1 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #333;
+    font-size: 24px;
+}
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #555;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+    background: #357abd;
+}
+.error-message {
+    color: #d9534f;
+    font-size: 14px;
+    margin-bottom: 10px;
+    min-height: 20px;
+}
+body.chat-page {
+    display: block;
+    justify-content: initial;
+    align-items: initial;
+}
+
+.chat-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+.sidebar {
+    width: 300px;
+    background: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f0f2f5;
+}
+.sidebar-header {
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.contacts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+}
+
+.contact {
+    padding: 12px 16px;
+    cursor: pointer;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.contact:hover {
+    background: #f5f5f5;
+}
+.chat-header {
+    padding: 16px 20px;
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chat-header h2 {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+}
+
+.status {
+    font-size: 13px;
+    color: #4a90e2;
+}
+.messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.message {
+    max-width: 60%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message.them {
+    background: #ffffff;
+    color: #333;
+    align-self: flex-start;
+}
+
+.message.me {
+    background: #4a90e2;
+    color: #ffffff;
+    align-self: flex-end;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.input-area {
+    padding: 12px 20px;
+    background: #ffffff;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+}
+
+.input-area input:focus {
+    border-color: #4a90e2;
+}
+
+.input-area button {
+    padding: 10px 20px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.input-area button:hover {
+    background: #357abd;
+}
+
+.logout-btn {
+    margin-left: auto;
+    color: #d9534f;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 12px;
+    border: 1px solid #d9534f;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #d9534f;
+    color: white;
+}
+.auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.auth-switch a {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}

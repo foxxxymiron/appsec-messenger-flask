@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мессенджер</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="chat-page">
+    <div class="chat-container">
+        <aside class="sidebar">
+            <div class="sidebar-header" id="sidebarUser">{{ username }}</div>
+            <ul class="contacts">
+                <li class="contact">Иван</li>
+                <li class="contact">Мария</li>
+                <li class="contact">Группа</li>
+            </ul>
+        </aside>
+
+        <main class="chat-area">
+        <header class="chat-header">
+            <h2 id="chatUserName">Иван</h2>
+            <span class="status">онлайн</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Выйти</a>
+        </header>
+
+    <div class="messages"></div>
+
+            <div class="input-area">
+                <input type="text" id="messageInput" placeholder="Введите сообщение...">
+                <button type="button" id="sendBtn">Отправить</button>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/chat.js') }}">
+    </script>
+</body> 
+</html>
