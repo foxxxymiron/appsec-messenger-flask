@@ -20,6 +20,7 @@
         <main class="chat-area">
         <header class="chat-header">
             <h2 id="chatUserName">Иван</h2>
+            <script> sessionStorage.setItem('currentUser', '{{ username }}')</script>
             <span class="status">онлайн</span>
             <a href="{{ url_for('logout') }}" class="logout-btn">Выйти</a>
         </header>
