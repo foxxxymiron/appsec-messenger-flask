@@ -10,10 +10,10 @@ The application was found vulnerable to SQL Injection (SQLi) in the authenticati
 - **Result:** Successful login without knowing the password. The database returned the first user because the condition `1=1` is always true.
 
 ### Vulnerable Code Screenshot
-![Vulnerable Code Login](static/screenshots/stage-6-sqli/vulnerable-code-login.png)
+![Vulnerable Code Login](../static/screenshots/stage-6-sqli/vulnerable-code-login.png)
 
 ### Successful Bypass Screenshot
-![Auth Bypass Chat](static/screenshots/stage-6-sqli/auth-bypass-chat.png)
+![Auth Bypass Chat](../static/screenshots/stage-6-sqli/auth-bypass-chat.png)
 
 ## 2. UNION-based SQL Injection (Data Exfiltration)
 - **Vulnerable Code:** 
@@ -22,13 +22,13 @@ The application was found vulnerable to SQL Injection (SQLi) in the authenticati
 - **Result:** The search page displayed usernames and passwords of all users from the `users` table.
 
 ### Vulnerable Code Screenshot
-![Vulnerable Code Search](static/screenshots/stage-6-sqli/vulnerable-code-search.png)
+![Vulnerable Code Search](../static/screenshots/stage-6-sqli/vulnerable-code-search.png)
 
 ### Payload Input Screenshot
-![Union Payload](static/screenshots/stage-6-sqli/SQL injection UNION.png)
+![Union Payload](../static/screenshots/stage-6-sqli/SQL injection UNION.png)
 
 ### Stolen Data Screenshot
-![Stolen Data](static/screenshots/stage-6-sqli/SQL injection UNION result.png)
+![Stolen Data](../static/screenshots/stage-6-sqli/SQL injection UNION result.png)
 
 ## 3. Mitigation
 To fix the vulnerability, **Prepared Statements (parameterized queries)** were implemented. User input is now passed separately from the SQL code using `?` placeholders, preventing it from being interpreted as commands.
@@ -37,9 +37,9 @@ To fix the vulnerability, **Prepared Statements (parameterized queries)** were i
 - **Fixed Code (search):** `conn.execute("SELECT sender, text FROM messages WHERE text LIKE ?", (search_pattern,))`
 
 ### Fixed Code Screenshots
-![Fixed Code Login](static/screenshots/stage-6-sqli/fixed-code-login.png)
-![Fixed Code Search](static/screenshots/stage-6-sqli/fixed-code-search.png)
+![Fixed Code Login](../static/screenshots/stage-6-sqli/fixed-code-login.png)
+![Fixed Code Search](../static/screenshots/stage-6-sqli/fixed-code-search.png)
 
 ### Exploit Failed Screenshots
-![Exploit Failed Auth](static/screenshots/stage-6-sqli/fixed auth bypass.png)
-![Exploit Failed Union](static/screenshots/stage-6-sqli/fixed UNION injection.png)
+![Exploit Failed Auth](../static/screenshots/stage-6-sqli/fixed auth bypass.png)
+![Exploit Failed Union](../static/screenshots/stage-6-sqli/fixed UNION injection.png)
