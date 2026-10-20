@@ -119,7 +119,7 @@ appsec-messenger-flask/
 - [x] **Stage 3** — Client-side part (HTML + CSS + JS)
 - [x] **Stage 4** — Flask backend: routing, templates, simple auth
 - [x] **Stage 5** — SQLite database, users and messages persistence
-- [ ] Stage 6+ — Web vulnerabilities (SQLi, XSS, CSRF, etc.)
+- [x] **Stage 6** — SQL Injection: auth bypass, UNION attack, mitigation
 
 ## Notes
 

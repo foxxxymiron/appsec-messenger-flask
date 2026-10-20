@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="chat-page">
+    <div class="auth-container" style="max-width: 600px; margin-top: 50px;">
+        <h1>Поиск по сообщениям</h1>
+        <form method="GET" action="/search">
+            <div class="form-group">
+                <input type="text" name="q" value="{{ query }}" placeholder="Введите текст...">
+            </div>
+            <button type="submit">Искать</button>
+        </form>
+
+        <div style="margin-top: 20px;">
+            {% for msg in messages %}
+                <div style="border-bottom: 1px solid #ccc; padding: 10px 0;">
+                    <strong>{{ msg['sender'] }}</strong>: {{ msg['text'] }}
+                </div>
+            {% endfor %}
+        </div>
+        <p style="margin-top: 20px;"><a href="/chat">Вернуться в чат</a></p>
+    </div>
+</body>
+</html>

@@ -1,5 +1,7 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+import webbrowser
+from threading import Timer
 
 app = Flask(__name__)
 app.secret_key = 'dev-secret-key-change-me'
@@ -70,16 +72,12 @@ def login():
         error = None
 
         conn = get_db_connection()
-        user = conn.execute(
-            'SELECT password FROM users WHERE username = ?', (username,)
-        ).fetchone()
+        query = "SELECT * FROM users WHERE username = ? AND password = ?"
+        user = conn.execute(query, (username, password)).fetchone()
         conn.close()
 
         if not user:
-            error = 'Пользователь не найден'
-        elif user['password'] != password:
-            error = 'Неверный пароль'
-
+            error = 'Неверный логин или пароль'
         if error:
             return render_template('login.html', error=error)
 
@@ -94,7 +92,22 @@ def chat():
     if 'username' not in session:
         return redirect(url_for('index'))
     return render_template('chat.html', username=session['username'])
-from flask import jsonify
+
+
+@app.route('/search')
+def search():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+
+    query = request.args.get('q', '')
+    
+    conn = get_db_connection()
+    sql = "SELECT sender, text FROM messages WHERE text LIKE ?"
+    search_pattern = f"%{query}%"
+    messages = conn.execute(sql, (search_pattern,)).fetchall()
+    conn.close()
+
+    return render_template('search.html', query=query, messages=messages)
 
 
 @app.route('/api/messages', methods=['GET', 'POST'])
@@ -141,9 +154,6 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
-
-import webbrowser
-from threading import Timer
 
 if __name__ == '__main__':
     Timer(1, lambda: webbrowser.open('http://127.0.0.1:5000')).start()

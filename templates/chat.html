@@ -20,8 +20,9 @@
         <main class="chat-area">
         <header class="chat-header">
             <h2 id="chatUserName">Иван</h2>
-            <script> sessionStorage.setItem('currentUser', '{{ username }}')</script>
+            <script> sessionStorage.setItem('currentUser', '{{ username }}');</script>
             <span class="status">онлайн</span>
+            <a href="{{ url_for('search') }}" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Поиск</a>
             <a href="{{ url_for('logout') }}" class="logout-btn">Выйти</a>
         </header>
 
@@ -33,7 +34,6 @@
             </div>
         </main>
     </div>
-    <script src="{{ url_for('static', filename='js/chat.js') }}">
-    </script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 </body> 
 </html>
