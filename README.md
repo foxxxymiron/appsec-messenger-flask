@@ -2,12 +2,9 @@
 
 [Русская версия](README.ru.md)
 
-Server-side messenger built with Python and Flask. Part of a self-paced
-AppSec learning roadmap.
+Server-side messenger built with Python and Flask. Part of a self-paced AppSec learning roadmap.
 
-This is **Stage 5** of the roadmap — a Flask-based backend with **SQLite**
-database integration. It builds on Stage 4 by moving user credentials and
-chat messages from volatile memory into a persistent database.
+This is the main project of the roadmap, where vulnerabilities are intentionally introduced, exploited, and then mitigated. **Stages 1-8 are completed.**
 
 ## Screenshots
 
@@ -16,6 +13,17 @@ chat messages from volatile memory into a persistent database.
 
 ### Chat
 ![Chat page](static/screenshots/chat.png)
+
+## 🎯 Roadmap Progress
+
+- [x] **Stage 1:** Introduction to AppSec (Theory)
+- [x] **Stage 2:** Python Basics (Theory & Practice)
+- [x] **Stage 3:** Client-side (HTML/CSS/JS)
+- [x] **Stage 4:** Flask Backend & Auth
+- [x] **Stage 5:** SQLite Database & CRUD
+- [x] **Stage 6:** SQL Injection (UNION-based) & Mitigation
+- [x] **Stage 7:** Blind SQL Injection (Time, Boolean, Error) & Mitigation
+- [x] **Stage 8:** Cross-Site Scripting (Stored XSS) & Mitigation
 
 ## Tech Stack
 
@@ -27,7 +35,7 @@ chat messages from volatile memory into a persistent database.
 
 ## Features
 
-- User registration with **server-side validation**
+- User registration with **server-side validation**:
   - Username (min 3 characters)
   - Email format
   - Password (min 6 characters)
@@ -43,7 +51,10 @@ chat messages from volatile memory into a persistent database.
 - **Messages API**:
   - `GET /api/messages` — fetch message history
   - `POST /api/messages` — send a new message
-- Messages survive page reloads and server restarts
+- **Security Labs (Intentionally Vulnerable):**
+  - SQL Injection (UNION-based) in `/login` and `/search` (Mitigated).
+  - Blind SQL Injection in `/login` (Mitigated).
+  - Stored XSS in `chat.js` via `innerHTML` (Mitigated).
 
 ## Limitations (by design)
 
@@ -58,20 +69,22 @@ chat messages from volatile memory into a persistent database.
 appsec-messenger-flask/
 ├── app.py                  Flask application
 ├── init_db.py              Database initialization script
-├── crud_test.py            CRUD practice script (optional)
+├── inject_xss.py           Script to inject XSS payload into DB (Stage 8)
 ├── requirements.txt        Python dependencies
 ├── app.db                  SQLite database (not tracked)
 ├── templates/
 │   ├── index.html          Registration page
 │   ├── login.html          Login page
+│   ├── search.html         Search page (Vulnerable to SQLi in Stage 6)
 │   └── chat.html           Chat page
 ├── static/
 │   ├── css/
 │   │   └── style.css       Styles
 │   ├── js/
 │   │   ├── auth.js         Registration form validation
-│   │   └── chat.js         Chat logic
+│   │   └── chat.js         Chat logic (Fixed XSS in Stage 8)
 │   └── screenshots/
+├── writeups/               Local security reports for Stage 6-8
 └── venv/                   (not tracked)
 ```
 
@@ -82,6 +95,7 @@ appsec-messenger-flask/
 | GET / POST | `/` | Registration |
 | GET / POST | `/login` | Login |
 | GET | `/chat` | Chat (protected) |
+| GET | `/search` | Search messages (protected, vulnerable to SQLi) |
 | GET | `/logout` | Logout |
 | GET / POST | `/api/messages` | Messages API (protected) |
 
@@ -114,21 +128,19 @@ appsec-messenger-flask/
    ```
 9. Open `http://127.0.0.1:5000` in your browser.
 
-## Roadmap
+## Mitigation Notes
 
-- [x] **Stage 3** — Client-side part (HTML + CSS + JS)
-- [x] **Stage 4** — Flask backend: routing, templates, simple auth
-- [x] **Stage 5** — SQLite database, users and messages persistence
-- [x] **Stage 6** — SQL Injection: auth bypass, UNION attack, mitigation
+All vulnerabilities introduced during the roadmap have been patched using best practices:
+- **SQL Injection:** Prevented by using **Parameterized Queries** (`?` placeholders), which strictly separate SQL code from user input.
+- **Stored XSS:** Prevented by using **Safe DOM APIs** (`textContent` instead of `innerHTML`), which treat user input as plain text and prevent HTML/JS execution.
+
+*The malicious XSS payload remains in the database to demonstrate that safe rendering prevents execution even if malicious data is stored.*
 
 ## Notes
 
-Client-side validation is intended for UX only — it can be bypassed
-via DevTools. Real validation is implemented **on the server**
-(see `app.py`). This is the core principle of AppSec: **never trust the client**.
+Client-side validation is intended for UX only — it can be bypassed via DevTools. Real validation is implemented **on the server** (see `app.py`). This is the core principle of AppSec: **never trust the client**.
 
-Database access uses **parameterized queries** (`?` placeholders) to prevent
-SQL injection — the topic of Stage 6.
+Security headers like `HttpOnly` cookies and safe DOM rendering provide Defense in Depth against session hijacking and XSS.
 
 ## Author
 
