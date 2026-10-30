@@ -6,14 +6,6 @@
 
 Это основной проект роудмапа, в котором уязвимости намеренно внедряются, эксплуатируются, а затем исправляются. **Этапы 1-8 завершены.**
 
-## Скриншоты
-
-### Вход
-![Страница входа](static/screenshots/login.png)
-
-### Чат
-![Страница чата](static/screenshots/chat.png)
-
 ## 🎯 Прогресс по роудмапу
 
 - [x] **Этап 1:** Введение в AppSec (Теория)
@@ -24,6 +16,26 @@
 - [x] **Этап 6:** SQL Injection (UNION) и защита
 - [x] **Этап 7:** Blind SQL Injection (Time, Boolean, Error) и защита
 - [x] **Этап 8:** Cross-Site Scripting (Stored XSS) и защита
+
+## 📝 Отчеты по безопасности
+- [Этап 6: SQL Injection](writeups/stage-6-sqli.ru.md)
+- [Этап 8: Stored XSS](writeups/stage-8-xss.ru.md)
+
+👉 **[Все отчеты по лабораториям PortSwigger лежат в репозитории appsec-writeups](https://github.com/foxxxymiron/appsec-writeups)**
+
+## Скриншоты
+
+### Интерфейс входа и чата
+![Страница входа](static/screenshots/login.png)
+![Страница чата](static/screenshots/chat.png)
+
+### Лабораторные по XSS: Эксплуатация (PoC)
+*Stored XSS, приводящий к полному дефейсу приложения.*
+![XSS Defacement](static/screenshots/xss/03-xss-defacement.png)
+
+### Лабораторные по XSS: Защита
+*Исправленный рендеринг через `textContent`. Вредоносный пейлоад безопасно отображается как текст.*
+![XSS Fixed](static/screenshots/xss/04-xss-fixed.png)
 
 ## Стек
 
@@ -84,7 +96,9 @@ appsec-messenger-flask/
 │   │   ├── auth.js         Валидация формы регистрации
 │   │   └── chat.js         Логика чата (XSS исправлен на Этапе 8)
 │   └── screenshots/
-├── writeups/               Локальные отчеты (Этапы 6-8)
+├── writeups/
+│   ├── stage-6-sqli.ru.md  Отчет по SQL Injection (Этап 6)
+│   └── stage-8-xss.ru.md   Отчет по Stored XSS (Этап 8)
 └── venv/                   (не отслеживается)
 ```
 

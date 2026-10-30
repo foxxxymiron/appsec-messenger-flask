@@ -6,14 +6,6 @@ Server-side messenger built with Python and Flask. Part of a self-paced AppSec l
 
 This is the main project of the roadmap, where vulnerabilities are intentionally introduced, exploited, and then mitigated. **Stages 1-8 are completed.**
 
-## Screenshots
-
-### Login
-![Login page](static/screenshots/login.png)
-
-### Chat
-![Chat page](static/screenshots/chat.png)
-
 ## 🎯 Roadmap Progress
 
 - [x] **Stage 1:** Introduction to AppSec (Theory)
@@ -24,6 +16,26 @@ This is the main project of the roadmap, where vulnerabilities are intentionally
 - [x] **Stage 6:** SQL Injection (UNION-based) & Mitigation
 - [x] **Stage 7:** Blind SQL Injection (Time, Boolean, Error) & Mitigation
 - [x] **Stage 8:** Cross-Site Scripting (Stored XSS) & Mitigation
+
+## 📝 Security Writeups
+- [Stage 6: SQL Injection](writeups/stage-6-sqli.md)
+- [Stage 8: Stored XSS](writeups/stage-8-xss.md)
+
+👉 **[View all PortSwigger labs and external writeups in the appsec-writeups repository](https://github.com/foxxxymiron/appsec-writeups)**
+
+## Screenshots
+
+### Login & Chat Interface
+![Login page](static/screenshots/login.png)
+![Chat page](static/screenshots/chat.png)
+
+### Security Labs: XSS Exploitation (PoC)
+*Stored XSS leading to full application defacement.*
+![XSS Defacement](static/screenshots/xss/03-xss-defacement.png)
+
+### Security Labs: XSS Mitigation
+*Fixed rendering via `textContent`. Malicious payload is safely displayed as text.*
+![XSS Fixed](static/screenshots/xss/04-xss-fixed.png)
 
 ## Tech Stack
 
@@ -84,7 +96,9 @@ appsec-messenger-flask/
 │   │   ├── auth.js         Registration form validation
 │   │   └── chat.js         Chat logic (Fixed XSS in Stage 8)
 │   └── screenshots/
-├── writeups/               Local security reports for Stage 6-8
+├── writeups/
+│   ├── stage-6-sqli.md     SQL Injection report (Stage 6)
+│   └── stage-8-xss.md      Stored XSS report (Stage 8)
 └── venv/                   (not tracked)
 ```
 
