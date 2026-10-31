@@ -35,5 +35,13 @@
         </main>
     </div>
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const nameFromUrl = urlParams.get('name');
+    const header = document.getElementById('chatUserName');
+    if (nameFromUrl) {
+        header.textContent = nameFromUrl; 
+    }
+</script>
 </body> 
 </html>

