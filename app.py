@@ -2,6 +2,7 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import webbrowser
 from threading import Timer
+import secrets
 
 app = Flask(__name__)
 app.secret_key = 'dev-secret-key-change-me'
@@ -92,6 +93,37 @@ def chat():
     if 'username' not in session:
         return redirect(url_for('index'))
     return render_template('chat.html', username=session['username'])
+
+
+@app.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        # 1. Получаем токен из формы и из сессии
+        token_from_form = request.form.get('csrf_token')
+        token_from_session = session.get('csrf_token')
+        
+        if not token_from_form or token_from_form != token_from_session:
+            return "Ошибка CSRF: Недействительный токен!", 403
+
+        new_password = request.form.get('new_password')
+        if new_password:
+            conn = get_db_connection()
+            conn.execute(
+                'UPDATE users SET password = ? WHERE username = ?',
+                (new_password, session['username'])
+            )
+            conn.commit()
+            conn.close()
+            return "Пароль успешно изменен! <a href='/chat'>Вернуться в чат</a>"
+            
+
+    if 'csrf_token' not in session:
+        session['csrf_token'] = secrets.token_hex(16)
+        
+    return render_template('change_password.html', csrf_token=session['csrf_token'])
 
 
 @app.route('/search')

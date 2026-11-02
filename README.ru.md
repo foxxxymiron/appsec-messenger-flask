@@ -4,7 +4,7 @@
 
 Серверная часть мессенджера на Python и Flask. Часть самостоятельного учебного плана по AppSec.
 
-Это основной проект роудмапа, в котором уязвимости намеренно внедряются, эксплуатируются, а затем исправляются. **Этапы 1-9 завершены.**
+Это основной проект роудмапа, в котором уязвимости намеренно внедряются, эксплуатируются, а затем исправляются. **Этапы 1-10 завершены.**
 
 ## 🎯 Прогресс по роудмапу
 
@@ -17,11 +17,13 @@
 - [x] **Этап 7:** Blind SQL Injection (Time, Boolean, Error) и защита
 - [x] **Этап 8:** Cross-Site Scripting (Stored XSS) и защита
 - [x] **Этап 9:** Cross-Site Scripting (DOM XSS) и защита
+- [x] **Этап 10:** Cross-Site Request Forgery (CSRF) и защита
 
 ## 📝 Отчеты по безопасности
 - [Этап 6: SQL Injection](writeups/stage-6-sqli.ru.md)
 - [Этап 8: Stored XSS](writeups/stage-8-xss.ru.md)
 - [Этап 9: DOM XSS](writeups/stage-9-dom-xss.ru.md)
+- [Этап 10: CSRF](writeups/stage-10-csrf.ru.md)
 
 👉 **[Все отчеты по лабораториям PortSwigger лежат в репозитории appsec-writeups](https://github.com/foxxxymiron/appsec-writeups)**
 
@@ -57,11 +59,14 @@
 - **API сообщений**:
   - `GET /api/messages` — получение истории сообщений
   - `POST /api/messages` — отправка нового сообщения
+- **Смена пароля**:
+  - `GET/POST /change-password` — смена пароля пользователя (защищено CSRF-токеном)
 - **Лабораторные по безопасности (Намеренно уязвимые):**
   - SQL-инъекции (UNION) в `/login` и `/search` (Исправлено).
   - Слепые SQL-инъекции в `/login` (Исправлено).
   - Stored XSS в `chat.js` через `innerHTML` (Исправлено).
   - DOM XSS в `chat.html` через `innerHTML` (Исправлено).
+  - CSRF в `/change-password` (Исправлено с помощью CSRF-токенов).
 
 ## Ограничения (специально)
 
@@ -77,13 +82,15 @@ appsec-messenger-flask/
 ├── app.py                  Flask-приложение
 ├── init_db.py              Скрипт инициализации БД
 ├── inject_xss.py           Скрипт для внедрения XSS в БД (Этап 8)
+├── csrf_realisation.html   PoC эксплойта CSRF (Этап 10)
 ├── requirements.txt        Зависимости Python
 ├── app.db                  База данных SQLite (не отслеживается)
 ├── templates/
 │   ├── index.html          Страница регистрации
 │   ├── login.html          Страница входа
 │   ├── search.html         Страница поиска (Уязвима к SQLi на Этапе 6)
-│   └── chat.html           Страница чата (DOM XSS исправлен на Этапе 9)
+│   ├── chat.html           Страница чата (DOM XSS исправлен на Этапе 9)
+│   └── change_password.html Страница смены пароля (CSRF исправлен на Этапе 10)
 ├── static/
 │   ├── css/
 │   │   └── style.css       Стили
@@ -93,11 +100,13 @@ appsec-messenger-flask/
 │   ├── img/
 │   │   └── fox.png         Фоновое изображение
 │   └── screenshots/
-│       └── dom-xss/        Скриншоты PoC для Этапа 9
+│       ├── dom-xss/        Скриншоты PoC для Этапа 9
+│       └── csrf/           Скриншоты PoC для Этапа 10
 ├── writeups/
 │   ├── stage-6-sqli.ru.md  Отчет по SQL Injection (Этап 6)
 │   ├── stage-8-xss.ru.md   Отчет по Stored XSS (Этап 8)
-│   └── stage-9-dom-xss.ru.md Отчет по DOM XSS (Этап 9)
+│   ├── stage-9-dom-xss.ru.md Отчет по DOM XSS (Этап 9)
+│   └── stage-10-csrf.ru.md Отчет по CSRF (Этап 10)
 └── venv/                   (не отслеживается)
 ```
 
@@ -111,6 +120,7 @@ appsec-messenger-flask/
 | GET | `/search` | Поиск сообщений (защищен, уязвим к SQLi) |
 | GET | `/logout` | Выход |
 | GET / POST | `/api/messages` | API сообщений (защищен) |
+| GET / POST | `/change-password` | Смена пароля (защищен, CSRF исправлен) |
 
 ## Как запустить
 
@@ -147,6 +157,7 @@ appsec-messenger-flask/
 - **SQL-инъекции:** Защищены с помощью **Параметризованных запросов** (плейсхолдеры `?`), которые строго разделяют SQL-код и ввод пользователя.
 - **Stored XSS:** Защищен с помощью **Безопасных DOM API** (`textContent` вместо `innerHTML`), которые обрабатывают ввод пользователя как чистый текст и предотвращают выполнение HTML/JS.
 - **DOM XSS:** Защищен с помощью **Безопасных DOM API** (`textContent`) для обработки параметров URL на стороне клиента.
+- **CSRF:** Защищен с помощью внедрения **Synchronizer Token Pattern** (паттерн синхронизации токенов). Уникальный токен генерируется для каждой сессии, встраивается в формы и проверяется на сервере.
 
 *Вредоносный пейлоад XSS остается в базе данных, чтобы продемонстрировать, что безопасный рендеринг предотвращает выполнение, даже если вредоносные данные сохранены.*
 

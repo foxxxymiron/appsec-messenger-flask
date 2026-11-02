@@ -4,7 +4,7 @@
 
 Server-side messenger built with Python and Flask. Part of a self-paced AppSec learning roadmap.
 
-This is the main project of the roadmap, where vulnerabilities are intentionally introduced, exploited, and then mitigated. **Stages 1-9 are completed.**
+This is the main project of the roadmap, where vulnerabilities are intentionally introduced, exploited, and then mitigated. **Stages 1-10 are completed.**
 
 ## 🎯 Roadmap Progress
 
@@ -17,11 +17,13 @@ This is the main project of the roadmap, where vulnerabilities are intentionally
 - [x] **Stage 7:** Blind SQL Injection (Time, Boolean, Error) & Mitigation
 - [x] **Stage 8:** Cross-Site Scripting (Stored XSS) & Mitigation
 - [x] **Stage 9:** Cross-Site Scripting (DOM XSS) & Mitigation
+- [x] **Stage 10:** Cross-Site Request Forgery (CSRF) & Mitigation
 
 ## 📝 Security Writeups
 - [Stage 6: SQL Injection](writeups/stage-6-sqli.md)
 - [Stage 8: Stored XSS](writeups/stage-8-xss.md)
 - [Stage 9: DOM XSS](writeups/stage-9-dom-xss.md)
+- [Stage 10: CSRF](writeups/stage-10-csrf.md)
 
 👉 **[View all PortSwigger labs and external writeups in the appsec-writeups repository](https://github.com/foxxxymiron/appsec-writeups)**
 
@@ -57,11 +59,14 @@ This is the main project of the roadmap, where vulnerabilities are intentionally
 - **Messages API**:
   - `GET /api/messages` — fetch message history
   - `POST /api/messages` — send a new message
+- **Password Change**:
+  - `GET/POST /change-password` — change user password (protected by CSRF token)
 - **Security Labs (Intentionally Vulnerable):**
   - SQL Injection (UNION-based) in `/login` and `/search` (Mitigated).
   - Blind SQL Injection in `/login` (Mitigated).
   - Stored XSS in `chat.js` via `innerHTML` (Mitigated).
   - DOM XSS in `chat.html` via `innerHTML` (Mitigated).
+  - CSRF in `/change-password` (Mitigated with CSRF tokens).
 
 ## Limitations (by design)
 
@@ -77,13 +82,15 @@ appsec-messenger-flask/
 ├── app.py                  Flask application
 ├── init_db.py              Database initialization script
 ├── inject_xss.py           Script to inject XSS payload into DB (Stage 8)
+├── csrf_realisation.html   CSRF exploit PoC (Stage 10)
 ├── requirements.txt        Python dependencies
 ├── app.db                  SQLite database (not tracked)
 ├── templates/
 │   ├── index.html          Registration page
 │   ├── login.html          Login page
 │   ├── search.html         Search page (Vulnerable to SQLi in Stage 6)
-│   └── chat.html           Chat page (Fixed DOM XSS in Stage 9)
+│   ├── chat.html           Chat page (Fixed DOM XSS in Stage 9)
+│   └── change_password.html Password change page (Fixed CSRF in Stage 10)
 ├── static/
 │   ├── css/
 │   │   └── style.css       Styles
@@ -93,11 +100,13 @@ appsec-messenger-flask/
 │   ├── img/
 │   │   └── fox.png         Background image
 │   └── screenshots/
-│       └── dom-xss/        Stage 9 PoC screenshots
+│       ├── dom-xss/        Stage 9 PoC screenshots
+│       └── csrf/           Stage 10 PoC screenshots
 ├── writeups/
 │   ├── stage-6-sqli.md     SQL Injection report (Stage 6)
 │   ├── stage-8-xss.md      Stored XSS report (Stage 8)
-│   └── stage-9-dom-xss.md  DOM XSS report (Stage 9)
+│   ├── stage-9-dom-xss.md  DOM XSS report (Stage 9)
+│   └── stage-10-csrf.md    CSRF report (Stage 10)
 └── venv/                   (not tracked)
 ```
 
@@ -111,6 +120,7 @@ appsec-messenger-flask/
 | GET | `/search` | Search messages (protected, vulnerable to SQLi) |
 | GET | `/logout` | Logout |
 | GET / POST | `/api/messages` | Messages API (protected) |
+| GET / POST | `/change-password` | Change password (protected, CSRF mitigated) |
 
 ## How to Run
 
@@ -147,6 +157,7 @@ All vulnerabilities introduced during the roadmap have been patched using best p
 - **SQL Injection:** Prevented by using **Parameterized Queries** (`?` placeholders), which strictly separate SQL code from user input.
 - **Stored XSS:** Prevented by using **Safe DOM APIs** (`textContent` instead of `innerHTML`), which treat user input as plain text and prevent HTML/JS execution.
 - **DOM XSS:** Prevented by using **Safe DOM APIs** (`textContent`) for handling URL parameters on the client-side.
+- **CSRF:** Prevented by implementing **Synchronizer Token Pattern**. A unique token is generated per session, embedded in forms, and validated on the server.
 
 *The malicious XSS payload remains in the database to demonstrate that safe rendering prevents execution even if malicious data is stored.*
 
