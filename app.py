@@ -3,6 +3,9 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 import webbrowser
 from threading import Timer
 import secrets
+import os
+import urllib.request
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 app.secret_key = 'dev-secret-key-change-me'
@@ -101,7 +104,6 @@ def change_password():
         return redirect(url_for('index'))
     
     if request.method == 'POST':
-        # 1. Получаем токен из формы и из сессии
         token_from_form = request.form.get('csrf_token')
         token_from_session = session.get('csrf_token')
         
@@ -119,11 +121,50 @@ def change_password():
             conn.close()
             return "Пароль успешно изменен! <a href='/chat'>Вернуться в чат</a>"
             
-
     if 'csrf_token' not in session:
         session['csrf_token'] = secrets.token_hex(16)
         
     return render_template('change_password.html', csrf_token=session['csrf_token'])
+
+
+@app.route('/fetch-avatar', methods=['GET', 'POST'])
+def fetch_avatar():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        url = request.form.get('url')
+        if url:
+            try:
+                parsed_url = urlparse(url)
+                
+                if parsed_url.scheme not in ('http', 'https'):
+                    return "Ошибка: Разрешен только протокол HTTP/HTTPS (защита от file://)", 400
+                
+                if parsed_url.hostname in ('127.0.0.1', 'localhost', '0.0.0.0'):
+                    return "Ошибка: Запросы к локальному серверу запрещены (защита от SSRF)", 400
+
+                with urllib.request.urlopen(url) as response:
+                    content = response.read()
+                
+                if url.endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')):
+                    filepath = os.path.join('static', 'img', 'avatar.jpg')
+                    with open(filepath, 'wb') as f:
+                        f.write(content)
+                    return f'<h1>Успешно!</h1><img src="/static/img/avatar.jpg" style="max-width: 300px;"><br><a href="/chat">Назад в чат</a>'
+                
+                else:
+                    return f"<h1>Успешно! Вот что скачал сервер:</h1><pre>{content.decode('utf-8', errors='ignore')}</pre><br><a href='/chat'>Назад в чат</a>"
+                    
+            except Exception as e:
+                return f"Ошибка: {e}"
+
+    return """
+    <form method="POST">
+        <input type="text" name="url" placeholder="https://example.com/avatar.jpg" size="50">
+        <button type="submit">Загрузить аватар</button>
+    </form>
+    """
 
 
 @app.route('/search')
@@ -188,5 +229,6 @@ def logout():
 
 
 if __name__ == '__main__':
-    Timer(1, lambda: webbrowser.open('http://127.0.0.1:5000')).start()
-    app.run(debug=True)
+    if not os.environ.get("WERKZEUG_RUN_MAIN"):
+        Timer(1, lambda: webbrowser.open('http://127.0.0.1:5000')).start()
+    app.run(debug=True, use_reloader=True)

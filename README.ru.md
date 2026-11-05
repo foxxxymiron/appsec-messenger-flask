@@ -4,7 +4,7 @@
 
 Серверная часть мессенджера на Python и Flask. Часть самостоятельного учебного плана по AppSec.
 
-Это основной проект роудмапа, в котором уязвимости намеренно внедряются, эксплуатируются, а затем исправляются. **Этапы 1-10 завершены.**
+Это основной проект роудмапа, в котором уязвимости намеренно внедряются, эксплуатируются, а затем исправляются. **Этапы 1-11 завершены.**
 
 ## 🎯 Прогресс по роудмапу
 
@@ -18,12 +18,14 @@
 - [x] **Этап 8:** Cross-Site Scripting (Stored XSS) и защита
 - [x] **Этап 9:** Cross-Site Scripting (DOM XSS) и защита
 - [x] **Этап 10:** Cross-Site Request Forgery (CSRF) и защита
+- [x] **Этап 11:** Server-Side Request Forgery (SSRF) и защита
 
 ## 📝 Отчеты по безопасности
 - [Этап 6: SQL Injection](writeups/stage-6-sqli.ru.md)
 - [Этап 8: Stored XSS](writeups/stage-8-xss.ru.md)
 - [Этап 9: DOM XSS](writeups/stage-9-dom-xss.ru.md)
 - [Этап 10: CSRF](writeups/stage-10-csrf.ru.md)
+- [Этап 11: SSRF](writeups/stage-11-ssrf.ru.md)
 
 👉 **[Все отчеты по лабораториям PortSwigger лежат в репозитории appsec-writeups](https://github.com/foxxxymiron/appsec-writeups)**
 
@@ -61,12 +63,15 @@
   - `POST /api/messages` — отправка нового сообщения
 - **Смена пароля**:
   - `GET/POST /change-password` — смена пароля пользователя (защищено CSRF-токеном)
+- **Загрузка аватара**:
+  - `GET/POST /fetch-avatar` — скачивание аватара по URL (защищено от SSRF)
 - **Лабораторные по безопасности (Намеренно уязвимые):**
   - SQL-инъекции (UNION) в `/login` и `/search` (Исправлено).
   - Слепые SQL-инъекции в `/login` (Исправлено).
   - Stored XSS в `chat.js` через `innerHTML` (Исправлено).
   - DOM XSS в `chat.html` через `innerHTML` (Исправлено).
   - CSRF в `/change-password` (Исправлено с помощью CSRF-токенов).
+  - SSRF в `/fetch-avatar` (Исправлено с помощью валидации URL).
 
 ## Ограничения (специально)
 
@@ -101,12 +106,14 @@ appsec-messenger-flask/
 │   │   └── fox.png         Фоновое изображение
 │   └── screenshots/
 │       ├── dom-xss/        Скриншоты PoC для Этапа 9
-│       └── csrf/           Скриншоты PoC для Этапа 10
+│       ├── csrf/           Скриншоты PoC для Этапа 10
+│       └── ssrf/           Скриншоты PoC для Этапа 11
 ├── writeups/
 │   ├── stage-6-sqli.ru.md  Отчет по SQL Injection (Этап 6)
 │   ├── stage-8-xss.ru.md   Отчет по Stored XSS (Этап 8)
 │   ├── stage-9-dom-xss.ru.md Отчет по DOM XSS (Этап 9)
-│   └── stage-10-csrf.ru.md Отчет по CSRF (Этап 10)
+│   ├── stage-10-csrf.ru.md Отчет по CSRF (Этап 10)
+│   └── stage-11-ssrf.ru.md Отчет по SSRF (Этап 11)
 └── venv/                   (не отслеживается)
 ```
 
@@ -121,6 +128,7 @@ appsec-messenger-flask/
 | GET | `/logout` | Выход |
 | GET / POST | `/api/messages` | API сообщений (защищен) |
 | GET / POST | `/change-password` | Смена пароля (защищен, CSRF исправлен) |
+| GET / POST | `/fetch-avatar` | Загрузка аватара (защищен, SSRF исправлен) |
 
 ## Как запустить
 
@@ -158,6 +166,7 @@ appsec-messenger-flask/
 - **Stored XSS:** Защищен с помощью **Безопасных DOM API** (`textContent` вместо `innerHTML`), которые обрабатывают ввод пользователя как чистый текст и предотвращают выполнение HTML/JS.
 - **DOM XSS:** Защищен с помощью **Безопасных DOM API** (`textContent`) для обработки параметров URL на стороне клиента.
 - **CSRF:** Защищен с помощью внедрения **Synchronizer Token Pattern** (паттерн синхронизации токенов). Уникальный токен генерируется для каждой сессии, встраивается в формы и проверяется на сервере.
+- **SSRF:** Защищен с помощью **строгой валидации URL**. Разрешены только протоколы `http/https`, а запросы к localhost и внутренним IP блокируются.
 
 *Вредоносный пейлоад XSS остается в базе данных, чтобы продемонстрировать, что безопасный рендеринг предотвращает выполнение, даже если вредоносные данные сохранены.*
 

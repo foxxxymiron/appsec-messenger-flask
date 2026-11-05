@@ -24,10 +24,11 @@
             <span class="status">онлайн</span>
             <a href="{{ url_for('search') }}" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Поиск</a>
             <a href="{{ url_for('change_password') }}" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Сменить пароль</a>
+            <a href="{{ url_for('fetch_avatar') }}" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Аватар</a>
             <a href="{{ url_for('logout') }}" class="logout-btn">Выйти</a>
         </header>
 
-    <div class="messages"></div>
+        <div class="messages"></div>
 
             <div class="input-area">
                 <input type="text" id="messageInput" placeholder="Введите сообщение...">
@@ -43,6 +44,6 @@
     if (nameFromUrl) {
         header.textContent = nameFromUrl; 
     }
-</script>
-</body> 
+    </script>
+</body>
 </html>
