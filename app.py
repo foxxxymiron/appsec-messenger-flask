@@ -167,6 +167,49 @@ def fetch_avatar():
     """
 
 
+@app.route('/wallet', methods=['GET', 'POST'])
+def wallet():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+        
+    conn = get_db_connection()
+    
+    if request.method == 'POST':
+        recipient = request.form.get('recipient')
+        amount = int(request.form.get('amount', 0))
+        
+        if recipient and amount:
+            if amount <= 0:
+                return "Ошибка: Сумма перевода должна быть больше нуля! <a href='/wallet'>Назад</a>"
+            
+            current_user = conn.execute('SELECT coins FROM users WHERE username = ?', (session['username'],)).fetchone()
+            if current_user['coins'] < amount:
+                return "Ошибка: Недостаточно монет на балансе! <a href='/wallet'>Назад</a>"
+
+            conn.execute(
+                'UPDATE users SET coins = coins - ? WHERE username = ?',
+                (amount, session['username'])
+            )
+            conn.execute(
+                'UPDATE users SET coins = coins + ? WHERE username = ?',
+                (amount, recipient)
+            )
+            conn.commit()
+            return "Перевод выполнен! <a href='/wallet'>Назад</a>"
+            
+    user = conn.execute('SELECT coins FROM users WHERE username = ?', (session['username'],)).fetchone()
+    conn.close()
+    
+    return f"""
+    <h1>Кошелек</h1>
+    <p>Ваш баланс: {user['coins']} монет</p>
+    <form method="POST">
+        <input type="text" name="recipient" placeholder="Кому (логин)">
+        <input type="number" name="amount" placeholder="Сумма">
+        <button type="submit">Перевести</button>
+    </form>
+    <p><a href="/chat">Вернуться в чат</a></p>
+    """
 @app.route('/search')
 def search():
     if 'username' not in session:
