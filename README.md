@@ -4,7 +4,7 @@
 
 Server-side messenger built with Python and Flask. Part of a self-paced AppSec learning roadmap.
 
-This is the main project of the roadmap, where vulnerabilities are intentionally introduced, exploited, and then mitigated. **Stages 1-11 are completed.**
+This is the main project of the roadmap, where vulnerabilities are intentionally introduced, exploited, and then mitigated. **Stages 1-12 are completed.**
 
 ## 🎯 Roadmap Progress
 
@@ -19,6 +19,7 @@ This is the main project of the roadmap, where vulnerabilities are intentionally
 - [x] **Stage 9:** Cross-Site Scripting (DOM XSS) & Mitigation
 - [x] **Stage 10:** Cross-Site Request Forgery (CSRF) & Mitigation
 - [x] **Stage 11:** Server-Side Request Forgery (SSRF) & Mitigation
+- [x] **Stage 12:** Business Logic Vulnerabilities & Mitigation
 
 ## 📝 Security Writeups
 - [Stage 6: SQL Injection](writeups/stage-6-sqli.md)
@@ -26,6 +27,7 @@ This is the main project of the roadmap, where vulnerabilities are intentionally
 - [Stage 9: DOM XSS](writeups/stage-9-dom-xss.md)
 - [Stage 10: CSRF](writeups/stage-10-csrf.md)
 - [Stage 11: SSRF](writeups/stage-11-ssrf.md)
+- [Stage 12: Business Logic](writeups/stage-12-business-logic.md)
 
 👉 **[View all PortSwigger labs and external writeups in the appsec-writeups repository](https://github.com/foxxxymiron/appsec-writeups)**
 
@@ -56,7 +58,7 @@ This is the main project of the roadmap, where vulnerabilities are intentionally
 - Protected `/chat` route — accessible only to logged-in users
 - Logout
 - **Persistent storage** in SQLite:
-  - `users` table — credentials
+  - `users` table — credentials and coin balance
   - `messages` table — chat history
 - **Messages API**:
   - `GET /api/messages` — fetch message history
@@ -65,6 +67,8 @@ This is the main project of the roadmap, where vulnerabilities are intentionally
   - `GET/POST /change-password` — change user password (protected by CSRF token)
 - **Avatar Fetching**:
   - `GET/POST /fetch-avatar` — fetch an avatar from a URL (protected from SSRF)
+- **Wallet**:
+  - `GET/POST /wallet` — transfer coins between users (protected from logic flaws)
 - **Security Labs (Intentionally Vulnerable):**
   - SQL Injection (UNION-based) in `/login` and `/search` (Mitigated).
   - Blind SQL Injection in `/login` (Mitigated).
@@ -72,6 +76,7 @@ This is the main project of the roadmap, where vulnerabilities are intentionally
   - DOM XSS in `chat.html` via `innerHTML` (Mitigated).
   - CSRF in `/change-password` (Mitigated with CSRF tokens).
   - SSRF in `/fetch-avatar` (Mitigated with URL validation).
+  - Business Logic Flaw in `/wallet` (Mitigated with server-side validation).
 
 ## Limitations (by design)
 
@@ -107,13 +112,15 @@ appsec-messenger-flask/
 │   └── screenshots/
 │       ├── dom-xss/        Stage 9 PoC screenshots
 │       ├── csrf/           Stage 10 PoC screenshots
-│       └── ssrf/           Stage 11 PoC screenshots
+│       ├── ssrf/           Stage 11 PoC screenshots
+│       └── blv/            Stage 12 PoC screenshots
 ├── writeups/
 │   ├── stage-6-sqli.md     SQL Injection report (Stage 6)
 │   ├── stage-8-xss.md      Stored XSS report (Stage 8)
 │   ├── stage-9-dom-xss.md  DOM XSS report (Stage 9)
 │   ├── stage-10-csrf.md    CSRF report (Stage 10)
-│   └── stage-11-ssrf.md    SSRF report (Stage 11)
+│   ├── stage-11-ssrf.md    SSRF report (Stage 11)
+│   └── stage-12-business-logic.md Business Logic report (Stage 12)
 └── venv/                   (not tracked)
 ```
 
@@ -129,6 +136,7 @@ appsec-messenger-flask/
 | GET / POST | `/api/messages` | Messages API (protected) |
 | GET / POST | `/change-password` | Change password (protected, CSRF mitigated) |
 | GET / POST | `/fetch-avatar` | Fetch avatar (protected, SSRF mitigated) |
+| GET / POST | `/wallet` | Wallet (protected, logic flaw mitigated) |
 
 ## How to Run
 
@@ -167,6 +175,7 @@ All vulnerabilities introduced during the roadmap have been patched using best p
 - **DOM XSS:** Prevented by using **Safe DOM APIs** (`textContent`) for handling URL parameters on the client-side.
 - **CSRF:** Prevented by implementing **Synchronizer Token Pattern**. A unique token is generated per session, embedded in forms, and validated on the server.
 - **SSRF:** Prevented by implementing **strict URL validation**. Only `http/https` protocols are allowed, and requests to localhost/internal IPs are blocked.
+- **Business Logic:** Prevented by implementing **strict server-side validation**. Transfer amounts are checked to be positive and within the available balance.
 
 *The malicious XSS payload remains in the database to demonstrate that safe rendering prevents execution even if malicious data is stored.*
 
