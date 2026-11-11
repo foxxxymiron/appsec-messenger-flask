@@ -210,6 +210,35 @@ def wallet():
     </form>
     <p><a href="/chat">Вернуться в чат</a></p>
     """
+
+
+@app.route('/view-file')
+def view_file():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    filename = request.args.get('file', '')
+    if filename:
+        try:
+            base_dir = os.path.realpath('static')
+            filepath = os.path.realpath(os.path.join(base_dir, filename))
+            
+            if not filepath.startswith(base_dir):
+                return "Ошибка: Доступ запрещен (защита от Directory Traversal)!", 403
+            
+            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
+                return f'<h3>File: {filename}</h3><img src="/static/{filename}" style="max-width: 600px;"><br><a href="/chat">Назад</a>'
+            
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            return f"<h3>File: {filename}</h3><pre>{content}</pre><br><a href='/chat'>Назад</a>"
+            
+        except Exception as e:
+            return f"Ошибка: {e}"
+    
+    return "Укажите файл в параметре ?file= (например, ?file=img/fox.png)"
+
+
 @app.route('/search')
 def search():
     if 'username' not in session:
