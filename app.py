@@ -212,6 +212,18 @@ def wallet():
     """
 
 
+@app.route('/page')
+def page():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    page_name = request.args.get('name', 'chat')
+    
+    allowed_pages = ['about', 'rules', 'chat']
+    if page_name not in allowed_pages:
+        return "Ошибка: Страница не найдена (защита от LFI)!", 404
+        
+    return render_template(f'{page_name}.html', username=session['username'])
 @app.route('/view-file')
 def view_file():
     if 'username' not in session:

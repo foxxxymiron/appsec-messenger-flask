@@ -256,3 +256,35 @@ body.chat-page {
 .auth-switch a:hover {
     text-decoration: underline;
 }
+details {
+    position: relative;
+    z-index: 9999;
+}
+
+details[open] > div {
+    z-index: 10000;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 120px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+details[open] > div a {
+    display: block;
+    padding: 5px;
+    color: #333;
+    text-decoration: none;
+    position: relative;
+    z-index: 10001;
+}
+
+details[open] > div a:hover {
+    background: #f0f0f0;
+}

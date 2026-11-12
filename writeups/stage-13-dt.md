@@ -19,10 +19,10 @@ The vulnerable code used `os.path.join('static', filename)` without validating t
 ## Evidence
 
 ### Normal File Viewing
-![Normal View](static/screenshots/dt/01-dt-normal.png)
+![Normal View](../static/screenshots/dt/01-dt-normal.png)
 
 ### Directory Traversal Exploit (Reading app.py)
-![Exploit](static/screenshots/dt/02-dt-exploit.png)
+![Exploit](../static/screenshots/dt/02-dt-exploit.png)
 
 ## Mitigation
 To fix this vulnerability, strict path normalization and prefix validation were implemented in the `/view-file` route.
@@ -48,4 +48,4 @@ if not filepath.startswith(base_dir):
 ## Evidence (Defense)
 
 ### Exploit Failed (Access Denied)
-![Fixed](static/screenshots/dt/03-dt-fixed.png)
+![Fixed](../static/screenshots/dt/03-dt-fixed.png)

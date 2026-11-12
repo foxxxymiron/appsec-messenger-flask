@@ -27,6 +27,9 @@
             <a href="{{ url_for('fetch_avatar') }}" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Аватар</a>
             <a href="{{ url_for('wallet') }}" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Кошелек</a>
             <a href="{{ url_for('view_file') }}?file=img/fox.png" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Файлы</a>
+            <a href="{{ url_for('page') }}?name=about" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">О нас</a>
+            <a href="{{ url_for('page') }}?name=rules" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Правила</a>
+
             <a href="{{ url_for('logout') }}" class="logout-btn">Выйти</a>
         </header>
 
