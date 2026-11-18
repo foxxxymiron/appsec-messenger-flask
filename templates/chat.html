@@ -29,8 +29,10 @@
             <a href="{{ url_for('view_file') }}?file=img/fox.png" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Файлы</a>
             <a href="{{ url_for('page') }}?name=about" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">О нас</a>
             <a href="{{ url_for('page') }}?name=rules" class="logout-btn" style="color: #4a90e2; border-color: #4a90e2; margin-right: 10px;">Правила</a>
-
-            <a href="{{ url_for('logout') }}" class="logout-btn">Выйти</a>
+            <form method="POST" action="{{ url_for('logout') }}" style="display:inline; margin-right: 10px;">
+    <input type="hidden" name="csrf_token" value="{{ session.get('csrf_token', '') }}">
+    <button type="submit" class="logout-btn" style="background:none; border:none; color:#4a90e2; cursor:pointer; font-size:inherit; padding:0;">Выйти</button>
+</form>
         </header>
 
         <div class="messages"></div>

@@ -11,6 +11,13 @@ app = Flask(__name__)
 app.secret_key = 'dev-secret-key-change-me'
 
 
+@app.after_request
+def add_security_headers(response):
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['Content-Security-Policy'] = "frame-ancestors 'none'"
+    return response
+
+
 def get_db_connection():
     conn = sqlite3.connect('app.db')
     conn.row_factory = sqlite3.Row
@@ -30,13 +37,13 @@ def index():
 
         error = None
         if len(username) < 3:
-            error = 'Логин должен быть не менее 3 символов'
+            error = 'Login must be at least 3 characters'
         elif '@' not in email or '.' not in email:
-            error = 'Введите корректный email'
+            error = 'Enter a valid email'
         elif len(password) < 6:
-            error = 'Пароль должен быть не менее 6 символов'
+            error = 'Password must be at least 6 characters'
         elif password != confirm:
-            error = 'Пароли не совпадают'
+            error = 'Passwords do not match'
 
         if not error:
             conn = get_db_connection()
@@ -44,7 +51,7 @@ def index():
                 'SELECT id FROM users WHERE username = ?', (username,)
             ).fetchone()
             if existing_user:
-                error = 'Пользователь с таким логином уже существует'
+                error = 'User with this login already exists'
             conn.close()
 
         if error:
@@ -95,6 +102,11 @@ def login():
 def chat():
     if 'username' not in session:
         return redirect(url_for('index'))
+    
+    # ДОБАВИТЬ ЭТИ 2 СТРОКИ:
+    if 'csrf_token' not in session:
+        session['csrf_token'] = secrets.token_hex(16)
+        
     return render_template('chat.html', username=session['username'])
 
 
@@ -306,8 +318,15 @@ def api_messages():
     return jsonify(result)
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    if request.method == 'POST':
+        token_from_form = request.form.get('csrf_token')
+        token_from_session = session.get('csrf_token')
+        
+        if not token_from_form or token_from_form != token_from_session:
+            return "Ошибка CSRF: Недействительный токен!", 403
+            
     session.pop('username', None)
     return redirect(url_for('index'))
 

